@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaEnvelope } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { Input, Button, Form } from "antd";
 
 const payload = {
   userId: "JohnSmith123",
@@ -29,29 +28,27 @@ function UserInfo() {
       <div className="form">
         <FaEnvelope className="icon large" />
         <h2>Tell us about yourself</h2>
-        <Form layout="vertical">
-          <Form.Item label="User ID">
-            <Input
-              placeholder="Enter your ID"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item label="Job Title">
-            <Input
-              placeholder="Enter your job title"
-              value={jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
-            />
-          </Form.Item>
-          <Button
-            type="primary"
-            disabled={isNextDisabled}
-            onClick={handleNext}
-          >
-            Next
-          </Button>
-        </Form>
+        <div className="input-group">
+          <label>User ID</label>
+          <input
+            type="text"
+            placeholder="Enter your ID"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+          />
+        </div>
+        <div className="input-group">
+          <label>Job Title</label>
+          <input
+            type="text"
+            placeholder="Enter your job title"
+            value={jobTitle}
+            onChange={(e) => setJobTitle(e.target.value)}
+          />
+        </div>
+        <button type="button" disabled={isNextDisabled} onClick={handleNext}>
+          Next
+        </button>
       </div>
     </div>
   );

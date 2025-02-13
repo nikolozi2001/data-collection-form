@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import { Select, Button, message } from "antd";
-
-const { Option } = Select;
 
 const payload = {
   userId: "JohnSmith123",
@@ -22,8 +19,13 @@ const payload = {
   ],
 };
 
+type Task = {
+  inputs: string[];
+  outputs: string[];
+};
+
 function TaskDataCollection() {
-  const [tasks, setTasks] = useState([{ inputs: [], outputs: [] }]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [userId, setUserId] = useState("");
   const [jobTitle, setJobTitle] = useState("");
 
@@ -33,9 +35,6 @@ function TaskDataCollection() {
     setJobTitle(payload.jobTitle);
   }, []);
 
-  const isAddTaskDisabled = tasks.some(
-    (task) => task.inputs.length === 0 || task.outputs.length === 0
-  );
   const isDoneDisabled = tasks.some(
     (task) => task.inputs.length === 0 || task.outputs.length === 0
   );
@@ -69,12 +68,12 @@ function TaskDataCollection() {
         body: JSON.stringify(data),
       })
         .then((response) => response.json())
-        .then((data) => {
-          message.success("Form submitted successfully!");
+        .then(() => {
+          alert("Form submitted successfully!");
         })
         .catch((error) => {
           console.error("Error:", error);
-          message.error("Form submission failed!");
+          alert("Form submission failed!");
         });
     }
   };
@@ -88,58 +87,52 @@ function TaskDataCollection() {
             <p>
               {index + 1} I create the
               <span>
-                <Select
-                  mode="multiple"
+                <select
+                  multiple
                   value={task.outputs}
-                  onChange={(value) =>
-                    handleTaskChange(index, "outputs", value)
+                  onChange={(e) =>
+                    handleTaskChange(index, "outputs", Array.from(e.target.selectedOptions, option => option.value))
                   }
                   className="full-width"
                 >
-                  <Option value="SMS Chart">SMS Chart</Option>
-                  <Option value="Email Report">Email Report</Option>
-                  <Option value="Dashboard Report">Dashboard Report</Option>
-                  <Option value="Performance Metrics">
-                    Performance Metrics
-                  </Option>
-                </Select>
+                  <option value="SMS Chart">SMS Chart</option>
+                  <option value="Email Report">Email Report</option>
+                  <option value="Dashboard Report">Dashboard Report</option>
+                  <option value="Performance Metrics">Performance Metrics</option>
+                </select>
               </span>
               using the
               <span>
-                <Select
-                  mode="multiple"
+                <select
+                  multiple
                   value={task.inputs}
-                  onChange={(value) =>
-                    handleTaskChange(index, "inputs", value)
+                  onChange={(e) =>
+                    handleTaskChange(index, "inputs", Array.from(e.target.selectedOptions, option => option.value))
                   }
                   className="full-width"
                 >
-                  <Option value="Customer Tech Pack">
-                    Customer Tech Pack
-                  </Option>
-                  <Option value="Financial Data">Financial Data</Option>
-                  <Option value="Sales Data">Sales Data</Option>
-                  <Option value="Customer Feedback">
-                    Customer Feedback
-                  </Option>
-                </Select>
+                  <option value="Customer Tech Pack">Customer Tech Pack</option>
+                  <option value="Financial Data">Financial Data</option>
+                  <option value="Sales Data">Sales Data</option>
+                  <option value="Customer Feedback">Customer Feedback</option>
+                </select>
               </span>
             </p>
           </div>
         ))}
-        <Button
-          type="dashed"
+        <button
+          type="button"
           onClick={addNewTask}
         >
           Add new task
-        </Button>
-        <Button
-          type="primary"
+        </button>
+        <button
+          type="button"
           disabled={isDoneDisabled}
           onClick={handleDone}
         >
           Done
-        </Button>
+        </button>
       </div>
     </div>
   );
