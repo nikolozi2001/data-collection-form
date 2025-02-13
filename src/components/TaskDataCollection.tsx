@@ -35,9 +35,18 @@ function TaskDataCollection() {
     setJobTitle(payload.jobTitle);
   }, []);
 
-  const isDoneDisabled = tasks.some(
-    (task) => task.inputs.length === 0 || task.outputs.length === 0
-  );
+  // Check if the current task is valid (both inputs and outputs are filled)
+  const isCurrentTaskValid = (task: Task) => {
+    return task.inputs.length > 0 && task.outputs.length > 0;
+  };
+
+  // Check if the "Add new task" button should be enabled
+  const isAddTaskDisabled =
+    tasks.length === 0 || !isCurrentTaskValid(tasks[tasks.length - 1]);
+
+  // Check if the "Done" button should be enabled
+  const isDoneDisabled =
+    tasks.length === 0 || tasks.some((task) => !isCurrentTaskValid(task));
 
   const handleTaskChange = (
     index: number,
@@ -91,14 +100,23 @@ function TaskDataCollection() {
                   multiple
                   value={task.outputs}
                   onChange={(e) =>
-                    handleTaskChange(index, "outputs", Array.from(e.target.selectedOptions, option => option.value))
+                    handleTaskChange(
+                      index,
+                      "outputs",
+                      Array.from(
+                        e.target.selectedOptions,
+                        (option) => option.value
+                      )
+                    )
                   }
                   className="full-width"
                 >
                   <option value="SMS Chart">SMS Chart</option>
                   <option value="Email Report">Email Report</option>
                   <option value="Dashboard Report">Dashboard Report</option>
-                  <option value="Performance Metrics">Performance Metrics</option>
+                  <option value="Performance Metrics">
+                    Performance Metrics
+                  </option>
                 </select>
               </span>
               using the
@@ -107,7 +125,14 @@ function TaskDataCollection() {
                   multiple
                   value={task.inputs}
                   onChange={(e) =>
-                    handleTaskChange(index, "inputs", Array.from(e.target.selectedOptions, option => option.value))
+                    handleTaskChange(
+                      index,
+                      "inputs",
+                      Array.from(
+                        e.target.selectedOptions,
+                        (option) => option.value
+                      )
+                    )
                   }
                   className="full-width"
                 >
@@ -123,6 +148,8 @@ function TaskDataCollection() {
         <button
           type="button"
           onClick={addNewTask}
+          disabled={isAddTaskDisabled}
+          style={{ marginTop: "16px" }}
         >
           Add new task
         </button>
@@ -130,6 +157,7 @@ function TaskDataCollection() {
           type="button"
           disabled={isDoneDisabled}
           onClick={handleDone}
+          style={{ marginTop: "16px" }}
         >
           Done
         </button>
